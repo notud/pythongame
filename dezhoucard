@@ -24,6 +24,9 @@ class Card:
 #数字
         if number <53:
             self.num = number % 13
+            #A比较大
+            if self.num==1:
+                self.num=14
 #小王
         elif number == 53:
             self.num = 14
@@ -51,10 +54,6 @@ class Dezhoucard(Card):
 
 # 胜利条件判断
     def success(playercard,publiccard):
-        fangkuai=0
-        meihua=0
-        hongtao=0
-        heitao=0
         a1=Dezhoucard(playercard[0])
         a2=Dezhoucard(playercard[1])
         a3=Dezhoucard(publiccard[0])
@@ -62,99 +61,109 @@ class Dezhoucard(Card):
         a5=Dezhoucard(publiccard[2])
         a6=Dezhoucard(publiccard[3])
         a7=Dezhoucard(publiccard[4])
-        if a1.flower=='方块':
-            fangkuai+=1
-        elif a1.flower=='黑桃':
-            heitao+=1
-        elif a1.flower=='红桃':
-            hongtao+=1
-        elif a1.flower=='梅花':
-            meihua+=1
-            
-        if a2.flower=='方块':
-            fangkuai+=1
-        elif a2.flower=='黑桃':
-            heitao+=1
-        elif a2.flower=='红桃':
-            hongtao+=1
-        elif a2.flower=='梅花':
-            meihua+=1
-            
-        if a3.flower=='方块':
-            fangkuai+=1
-        elif a3.flower=='黑桃':
-            heitao+=1
-        elif a3.flower=='红桃':
-            hongtao+=1
-        elif a3.flower=='梅花':
-            meihua+=1
-        
-        if a4.flower=='方块':
-            fangkuai+=1
-        elif a4.flower=='黑桃':
-            heitao+=1
-        elif a4.flower=='红桃':
-            hongtao+=1
-        elif a4.flower=='梅花':
-            meihua+=1
-        
-        if a5.flower=='方块':
-            fangkuai+=1
-        elif a5.flower=='黑桃':
-            heitao+=1
-        elif a5.flower=='红桃':
-            hongtao+=1
-        elif a5.flower=='梅花':
-            meihua+=1
-            
-        if a6.flower=='方块':
-            fangkuai+=1
-        elif a6.flower=='黑桃':
-            heitao+=1
-        elif a6.flower=='红桃':
-            hongtao+=1
-        elif a6.flower=='梅花':
-            meihua+=1
-        
-        if a7.flower=='方块':
-            fangkuai+=1
-        elif a7.flower=='黑桃':
-            heitao+=1
-        elif a7.flower=='红桃':
-            hongtao+=1
-        elif a7.flower=='梅花':
-            meihua+=1
-            
-        list=[a1.num,a2.num,a3.num,a4.num,a5.num]
+
+        list=[a1.num,a2.num,a3.num,a4.num,a5.num,a6.num,a7.num]
         list.sort()
+        list.reverse()
+        list2=[a1.flower,a2.flower,a3.flower,a4.flower,a5.flower,a6.flower,a7.flower]
+        list3 = [a1.num, a2.num, a3.num, a4.num, a5.num,a6.num,a7.num]
+        meihua=list2.count('梅花')
+        hongtao=list2.count('红桃')
+        heitao=list2.count('黑桃')
+        fangkuai=list2.count('方块')
+        number1 = list3.count(14)
+        number2 = list3.count(2)
+        number3 = list3.count(3)
+        number4 = list3.count(4)
+        number5 = list3.count(5)
+        number6 = list3.count(6)
+        number7 = list3.count(7)
+        number8 = list3.count(8)
+        number9 = list3.count(9)
+        number10 = list3.count(10)
+        number11 = list3.count(11)
+        number12 = list3.count(12)
+        number13 = list3.count(13)
+        listnumber=[number1,number2,number3,number4,number5,number6,number7,number8,number9,number10,number11,number12,number13]
+        listnumber.sort()
+        listnumber.reverse()
+        lingshi=[]
 # 皇家同花顺
-        if (meihua==5 or heitao==5 or hongtao==5 or fangkuai==5)and(list[0]==1 and list[1]==13 and list[2]==12 and
+        if (meihua==5 or heitao==5 or hongtao==5 or fangkuai==5)and(list[0]==14 and list[1]==13 and list[2]==12 and
         list[3] and list[4]==10):
-            return 9
+            return 10
 #同花顺
-        if(meihua==5 or heitao==5 or hongtao==5 or fangkuai==5)and():
+        if meihua==5:
+            for j in range(5):
+                i=list2.index('梅花')
+                list2.pop(i)
+                lingshi.append(list3.pop(i))
+            lingshi.sort()
+            lingshi.reverse()
+            if lingshi[0]==lingshi[1]+1 and lingshi[1]==lingshi[2]+1 and lingshi[2]==lingshi[3]+1\
+                and lingshi[3]==lingshi[4]+1:
+                return 9
+
+        elif heitao==5:
+            for j in range(5):
+                i=list2.index('黑桃')
+                list2.pop(i)
+                lingshi.append(list3.pop(i))
+            lingshi.sort()
+            lingshi.reverse()
+            if lingshi[0]==lingshi[1]+1 and lingshi[1]==lingshi[2]+1 and lingshi[2]==lingshi[3]+1 \
+                and lingshi[3]==lingshi[4]+1:
+                return 9
+
+        elif hongtao == 5:
+            for j in range(5):
+                i=list2.index('红桃')
+                list2.pop(i)
+                lingshi.append(list3.pop(i))
+            lingshi.sort()
+            lingshi.reverse()
+            if lingshi[0]==lingshi[1]+1 and lingshi[1]==lingshi[2]+1 and lingshi[2]==lingshi[3]+1 \
+                and lingshi[3]==lingshi[4]+1:
+                return 9
+
+        elif fangkuai == 5:
+            for j in range(5):
+                i=list2.index('方块')
+                list2.pop(i)
+                lingshi.append(list3.pop(i))
+            lingshi.sort()
+            lingshi.reverse()
+            if lingshi[0] == lingshi[1]+1 and lingshi[1] == lingshi[2]+1 and lingshi[2]==lingshi[3]+1 \
+                and lingshi[3] == lingshi[4]+1:
+                return 9
+            return 9
+#四条
+        if listnumber[0] == 4:
             return 8
-#四条    
-        if 
-            return 7
 #葫芦
-        if
-            return 6
+        if listnumber[0] == 3 and listnumber[1] == 2:
+            return 7
 #同花
-        if meihua==5 or heitao==5 or hongtao==5 or fangkuai==5:
-            return 5
+        if meihua == 5 or heitao == 5 or hongtao == 5 or fangkuai == 5:
+            return 6
 #顺子
-        if
-            return 4
+        if (list[0] == list[1]+1 and list[1] == list[2]+1 and list[2] == list[3]+1 and list[3]==list[4]+1) or\
+        (list[1] == list[2] + 1 and list[2] == list[3] + 1 and list[3] == list[4] + 1 and list[4] == list[5] + 1) or \
+        (list[2] == list[3] + 1 and list[3] == list[4] + 1 and list[4] == list[5] + 1 and list[5] == list[6] + 1):
+            return 5
 #三条
-            return 3
+        if listnumber[0] == 3:
+            return 4
 #两对
-            return 2
+        if listnumber[0] == listnumber[1] == 2:
+            return 3
 #对子
-            return 1
+        if (number1 == 2 or number2 == 2 or number3 == 2 or number4 == 2 or number5 == 2 or number6 == 2 or number7 == 2\
+            or number8 == 2 or number9 == 2 or number10 == 2 or number11 == 2 or number12 == 2 or number13 == 2):
+            return 2
 #高牌
         else:
-            return 0
+            return 1
 
 
 #随机发牌(玩家人数，每位玩家手牌数)
@@ -185,9 +194,18 @@ print(allplayer)
 print(public)
 
 playersuccess=[]
-#比牌型
+playersuccess2=[]
+#记录牌型
 for i in range(playernumber):
-    playersuccess.append(success(allplayer.append(i),public))
+    playersuccess.append(Dezhoucard.success(allplayer[i],public))
+    playersuccess2.append(Dezhoucard.success(allplayer[i],public))
 
+print(playersuccess)
+playersuccess.sort()
+playersuccess.reverse()
+print(playersuccess)
+#比牌型
+if playersuccess[0] > playersuccess[1]:
+    print("胜利者是第"+str(playersuccess2.index(playersuccess[0])+1)+'位玩家')
 #比牌的大小
 
