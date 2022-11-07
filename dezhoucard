@@ -1,0 +1,193 @@
+#德州扑克
+import random
+#公共牌
+public=[]
+playernumber=3
+#普通扑克牌
+class Card:
+    def __init__(self, number):
+#编号
+        self.number = number
+#花色
+        if self.number==54:
+            self.flower = '大王'
+        elif self.number==53:
+            self.flower = '小王'
+        elif 39<self.number<53:
+            self.flower = '黑桃'
+        elif 26<self.number<40:
+            self.flower = '红桃'
+        elif 13<self.number<27:
+            self.flower = '梅花'
+        elif 0<self.number<14:
+            self.flower = '方块'
+#数字
+        if number <53:
+            self.num = number % 13
+#小王
+        elif number == 53:
+            self.num = 14
+#大王
+        elif number == 54:
+            self.num = 15
+
+    def __str__(self):
+        if self.number < 53:
+            return str(self.flower)+str(self.num)
+        else:
+            return str(self.flower)
+
+    def compare(self, other):
+        if self.number >= other.number:
+            return 1
+        else:
+            return 0
+
+#德州扑克（去掉大小王）
+class Dezhoucard(Card):
+
+    def __init__(self,number):
+        super().__init__(number)
+
+# 胜利条件判断
+    def success(playercard,publiccard):
+        fangkuai=0
+        meihua=0
+        hongtao=0
+        heitao=0
+        a1=Dezhoucard(playercard[0])
+        a2=Dezhoucard(playercard[1])
+        a3=Dezhoucard(publiccard[0])
+        a4=Dezhoucard(publiccard[1])
+        a5=Dezhoucard(publiccard[2])
+        a6=Dezhoucard(publiccard[3])
+        a7=Dezhoucard(publiccard[4])
+        if a1.flower=='方块':
+            fangkuai+=1
+        elif a1.flower=='黑桃':
+            heitao+=1
+        elif a1.flower=='红桃':
+            hongtao+=1
+        elif a1.flower=='梅花':
+            meihua+=1
+            
+        if a2.flower=='方块':
+            fangkuai+=1
+        elif a2.flower=='黑桃':
+            heitao+=1
+        elif a2.flower=='红桃':
+            hongtao+=1
+        elif a2.flower=='梅花':
+            meihua+=1
+            
+        if a3.flower=='方块':
+            fangkuai+=1
+        elif a3.flower=='黑桃':
+            heitao+=1
+        elif a3.flower=='红桃':
+            hongtao+=1
+        elif a3.flower=='梅花':
+            meihua+=1
+        
+        if a4.flower=='方块':
+            fangkuai+=1
+        elif a4.flower=='黑桃':
+            heitao+=1
+        elif a4.flower=='红桃':
+            hongtao+=1
+        elif a4.flower=='梅花':
+            meihua+=1
+        
+        if a5.flower=='方块':
+            fangkuai+=1
+        elif a5.flower=='黑桃':
+            heitao+=1
+        elif a5.flower=='红桃':
+            hongtao+=1
+        elif a5.flower=='梅花':
+            meihua+=1
+            
+        if a6.flower=='方块':
+            fangkuai+=1
+        elif a6.flower=='黑桃':
+            heitao+=1
+        elif a6.flower=='红桃':
+            hongtao+=1
+        elif a6.flower=='梅花':
+            meihua+=1
+        
+        if a7.flower=='方块':
+            fangkuai+=1
+        elif a7.flower=='黑桃':
+            heitao+=1
+        elif a7.flower=='红桃':
+            hongtao+=1
+        elif a7.flower=='梅花':
+            meihua+=1
+            
+        list=[a1.num,a2.num,a3.num,a4.num,a5.num]
+        list.sort()
+# 皇家同花顺
+        if (meihua==5 or heitao==5 or hongtao==5 or fangkuai==5)and(list[0]==1 and list[1]==13 and list[2]==12 and
+        list[3] and list[4]==10):
+            return 9
+#同花顺
+        if(meihua==5 or heitao==5 or hongtao==5 or fangkuai==5)and():
+            return 8
+#四条    
+        if 
+            return 7
+#葫芦
+        if
+            return 6
+#同花
+        if meihua==5 or heitao==5 or hongtao==5 or fangkuai==5:
+            return 5
+#顺子
+        if
+            return 4
+#三条
+            return 3
+#两对
+            return 2
+#对子
+            return 1
+#高牌
+        else:
+            return 0
+
+
+#随机发牌(玩家人数，每位玩家手牌数)
+def submit(playernumber, cardnumber):
+    cardnow = 52
+#列表
+    player = []
+    nowplayer = []
+    card = list(range(1, 53))
+    for i in range(1, playernumber+1):
+        if i != 1:
+            player.append(nowplayer)
+            nowplayer = []
+        for j in range(1, cardnumber+1):
+            b = random.randint(0, cardnow-1)
+            nowplayer.append(card.pop(b))
+            cardnow -= 1
+    player.append(nowplayer)
+    for i in range(5):
+        b = random.randint(0, cardnow-1)
+        public.append(card.pop(b))
+        cardnow -= 1
+    return player
+
+#3个人玩
+allplayer = submit(playernumber, 2)
+print(allplayer)
+print(public)
+
+playersuccess=[]
+#比牌型
+for i in range(playernumber):
+    playersuccess.append(success(allplayer.append(i),public))
+
+#比牌的大小
+
