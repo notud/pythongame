@@ -1,32 +1,38 @@
 #德州扑克
 import random
+
 #公共牌
 public=[]
+
+#玩家数
 playernumber=3
+
 #普通扑克牌
 class Card:
     def __init__(self, number):
 #编号
         self.number = number
 #花色
-        if self.number==54:
+        if self.number == 54:
             self.flower = '大王'
-        elif self.number==53:
+        elif self.number == 53:
             self.flower = '小王'
-        elif 39<self.number<53:
+        elif 39 < self.number < 53:
             self.flower = '黑桃'
-        elif 26<self.number<40:
+        elif 26 < self.number < 40:
             self.flower = '红桃'
-        elif 13<self.number<27:
+        elif 13 < self.number < 27:
             self.flower = '梅花'
-        elif 0<self.number<14:
+        elif 0 < self.number < 14:
             self.flower = '方块'
 #数字
-        if number <53:
+        if number < 53:
             self.num = number % 13
-            #A比较大
-            if self.num==1:
-                self.num=14
+        if self.num == 0:
+            self.num = 13
+#A比较大
+        if self.num == 1:
+            self.num = 14
 #小王
         elif number == 53:
             self.num = 14
@@ -35,16 +41,22 @@ class Card:
             self.num = 15
 
     def __str__(self):
-        if self.number < 53:
+        if self.number < 53 and 1 < self.num < 11:
             return str(self.flower)+str(self.num)
+        elif self.number < 53 and self.num == 11:
+            return str(self.flower)+'J'
+        elif self.number < 53 and self.num == 12:
+            return str(self.flower)+'Q'
+        elif self.number < 53 and self.num == 13:
+            return str(self.flower)+'K'
+        elif self.number < 53 and self.num == 14:
+            return str(self.flower)+'A'
         else:
             return str(self.flower)
 
-    def compare(self, other):
-        if self.number >= other.number:
-            return 1
-        else:
-            return 0
+    def getnum(self):
+        return self.num
+
 
 #德州扑克（去掉大小王）
 class Dezhoucard(Card):
@@ -100,8 +112,7 @@ class Dezhoucard(Card):
                 lingshi.append(list3.pop(i))
             lingshi.sort()
             lingshi.reverse()
-            if lingshi[0]==lingshi[1]+1 and lingshi[1]==lingshi[2]+1 and lingshi[2]==lingshi[3]+1\
-                and lingshi[3]==lingshi[4]+1:
+            if (lingshi[0]==lingshi[1]+1) and (lingshi[1]==lingshi[2]+1) and (lingshi[2]==lingshi[3]+1) and (lingshi[3]==lingshi[4]+1):
                 return 9
 
         elif heitao==5:
@@ -111,8 +122,7 @@ class Dezhoucard(Card):
                 lingshi.append(list3.pop(i))
             lingshi.sort()
             lingshi.reverse()
-            if lingshi[0]==lingshi[1]+1 and lingshi[1]==lingshi[2]+1 and lingshi[2]==lingshi[3]+1 \
-                and lingshi[3]==lingshi[4]+1:
+            if (lingshi[0] == lingshi[1] + 1) and (lingshi[1] == lingshi[2] + 1) and (lingshi[2] == lingshi[3] + 1) and (lingshi[3] == lingshi[4] + 1):
                 return 9
 
         elif hongtao == 5:
@@ -122,8 +132,7 @@ class Dezhoucard(Card):
                 lingshi.append(list3.pop(i))
             lingshi.sort()
             lingshi.reverse()
-            if lingshi[0]==lingshi[1]+1 and lingshi[1]==lingshi[2]+1 and lingshi[2]==lingshi[3]+1 \
-                and lingshi[3]==lingshi[4]+1:
+            if (lingshi[0] == lingshi[1] + 1) and (lingshi[1] == lingshi[2] + 1) and (lingshi[2] == lingshi[3] + 1) and (lingshi[3] == lingshi[4] + 1):
                 return 9
 
         elif fangkuai == 5:
@@ -133,10 +142,8 @@ class Dezhoucard(Card):
                 lingshi.append(list3.pop(i))
             lingshi.sort()
             lingshi.reverse()
-            if lingshi[0] == lingshi[1]+1 and lingshi[1] == lingshi[2]+1 and lingshi[2]==lingshi[3]+1 \
-                and lingshi[3] == lingshi[4]+1:
+            if (lingshi[0] == lingshi[1] + 1) and (lingshi[1] == lingshi[2] + 1) and (lingshi[2] == lingshi[3] + 1) and (lingshi[3] == lingshi[4] + 1):
                 return 9
-            return 9
 #四条
         if listnumber[0] == 4:
             return 8
@@ -188,11 +195,31 @@ def submit(playernumber, cardnumber):
         cardnow -= 1
     return player
 
-#3个人玩
-allplayer = submit(playernumber, 2)
-print(allplayer)
-print(public)
+#查找第n个m
+def find(build,m,n):
+    now = 0
+    right = 0
+    while now < len(build) and right < n:
+        if build[now] == m:
+            right += 1
+        now += 1
+    now -= 1
+    return now
 
+#playernumber个人玩
+
+allplayer = submit(playernumber, 2)
+a = 0
+b = 0
+#发牌
+for a in range(playernumber):
+    print("\n"+"玩家"+str(a+1))
+    for b in range(2):
+        print(str(Dezhoucard(allplayer[a][b]))+' ',end="")
+print('\n公共牌为')
+for c in range(5):
+    print(str(Dezhoucard(public[c])), end=" ")
+print('\n', end=' ')
 playersuccess=[]
 playersuccess2=[]
 #记录牌型
@@ -200,12 +227,319 @@ for i in range(playernumber):
     playersuccess.append(Dezhoucard.success(allplayer[i],public))
     playersuccess2.append(Dezhoucard.success(allplayer[i],public))
 
-print(playersuccess)
+#记录牌的数字大小
+playercardnumber1=[]
+playercardnumber2=[]
+for a in range(playernumber):
+    if a != 0:
+        playercardnumber1.append(playercardnumber2)
+        playercardnumber2 = []
+    for b in range(2):
+        playercardnumber2.append(Dezhoucard(allplayer[a][b]).getnum())
+playercardnumber1.append(playercardnumber2)
+
+for a in range(playernumber):
+    for c in range(5):
+        playercardnumber1[a].append(Dezhoucard(public[c]).getnum())
+
 playersuccess.sort()
 playersuccess.reverse()
-print(playersuccess)
+#排序过的success
+
+
 #比牌型
 if playersuccess[0] > playersuccess[1]:
     print("胜利者是第"+str(playersuccess2.index(playersuccess[0])+1)+'位玩家')
+
 #比牌的大小
+else:
+    i = playersuccess.count(playersuccess[0])
+#有i个相同牌型
+    j = 0
+    playersuccess3 = []#记录评判的玩家的牌号
+    playersuccess4 = []#记录评判的玩家序号
+    playersuccessnow = []
+    k = 0
+    for j in range(i):
+        k = find(playersuccess2, playersuccess[0], j + 1)
+        if j != 0:
+            playersuccess3.append(playersuccessnow)
+            playersuccessnow = []
+        for a in range(7):
+            playersuccessnow.append(playercardnumber1[k][a])
+        playersuccess4.append(k)
+    playersuccess3.append(playersuccessnow)
+    j = 0
+
+#同花顺(找最大牌)
+    if playersuccess[0] == 9:
+        while j < i-1:
+            playersuccess3[j].sort()
+            playersuccess3[j].reverse()
+            j += 1
+        flag = 0
+        j = 0
+        while j < i:
+            if playersuccess3[j] < playersuccess3[j+1]:
+                flag = j+1
+            j += 1
+        print("胜利者是第"+str(playersuccess4[flag]+1)+'位玩家')
+
+#四条
+    elif playersuccess[0] == 8:
+        max1 = []
+        max2 = []
+        max3 = [0]
+        # 记录四条大小
+        for a in range(playernumber):
+            if a != 0:
+                max1.append(max3[0])
+                max2.append(max3[0])
+            max3=[0]
+            for b in range(2, 15):
+                if playercardnumber1[a].count(b) == 4:
+                    max3.pop()
+                    max3.append(b)#记录四条大小
+        max1.append(max3[0])
+        max2.append(max3[0])
+        max1.sort()
+        max1.reverse()
+        #最大的四条
+        if max1[0] > max1[1]:
+            print("胜利者是第" + str(max2.index(max1[0])+1) + '位玩家')
+        else:  #四条相同
+            q = max1.count(max1[0])  # q个相同对子
+            playerlast = []
+            playerlast2 = []
+            for j in range(q):
+                k = find(max2, max1[0], j)
+                playerlast.append(playersuccess3[k])
+                playerlast2.append(k)
+            for j in range(q):
+                playerlast[j].sort()
+                playerlast[j].reverse()
+            # 相同对子
+            flag = 0
+            for j in range(q - 1):
+                if playerlast[j] < playerlast[j + 1]:
+                    flag = j + 1
+                print(flag)
+            print("胜利者是第" + str(playerlast2[flag]+1) + '位玩家')
+
+#葫芦
+    elif playersuccess[0] == 7:
+        max1 = []
+        max2 = []
+        max3 = [0]
+        # 记录三条大小
+        for a in range(playernumber):
+            if a != 0:
+                max1.append(max3[0])
+                max2.append(max3[0])
+            max3=[0]
+            for b in range(2, 15):
+                if playercardnumber1[a].count(b) == 3:
+                    max3.pop()
+                    max3.append(b)  # 记录对子大小
+        max1.append(max3[0])
+        max2.append(max3[0])
+        max1.sort()
+        max1.reverse()
+        max4 = []
+        max5 = []
+        max6 = [0]
+        # 记录三条大小
+        for a in range(playernumber):
+            if a != 0:
+                max4.append(max6[0])
+                max5.append(max6[0])
+            max6=[0]
+            for b in range(2, 15):
+                if playercardnumber1[a].count(b) == 3:
+                    max6.pop()
+                    max6.append(b)  # 记录对子大小
+        max4.append(max6[0])
+        max5.append(max6[0])
+        max4.sort()
+        max4.reverse()
+        # 最大的三条
+        if max1[0] > max1[1]:
+            print("胜利者是第" + str(max2.index(max1[0]) + 1) + '位玩家')
+        elif max4[0] > max4[1]:
+            print("胜利者是第" + str(max5.index(max4[0]) + 1) + '位玩家')
+
+#同花
+    elif playersuccess[0] == 6:
+        for j in range(i):
+            playersuccess3[j].sort()
+            playersuccess3[j].reverse()
+        flag = 0
+        j = 0
+        while j < i - 1:
+            if playersuccess3[j] < playersuccess3[j + 1]:
+                flag = j + 1
+            j += 1
+        print("胜利者是第" + str(playersuccess4[flag]+1) + '位玩家')
+
+
+# 顺子
+    elif playersuccess[0] == 5:
+        for j in range(i):
+            playersuccess3[j].sort()
+            playersuccess3[j].reverse()
+        flag = 0
+        j = 0
+        while j < i - 1:
+            if playersuccess3[j] < playersuccess3[j + 1]:
+                flag = j + 1
+            j += 1
+        print("胜利者是第" + str(playersuccess4[flag]+1) + '位玩家')
+
+#三条
+    elif playersuccess[0] == 4:
+        max1 = []
+        max2 = []
+        max3 = [0]
+        # 记录三条大小
+        for a in range(playernumber):
+            if a != 0:
+                max1.append(max3[0])
+                max2.append(max3[0])
+            max3=[0]
+            for b in range(2, 15):
+                if playercardnumber1[a].count(b) == 3:
+                    max3.pop()
+                    max3.append(b)  # 记录对子大小
+        max1.append(max3[0])
+        max2.append(max3[0])
+        max1.sort()
+        max1.reverse()
+        # 最大的三条
+        if max1[0] > max1[1]:
+            print("胜利者是第" + str(max2.index(max1[0]) + 1) + '位玩家')
+        else:  # 三条相同
+            q = max1.count(max1[0])  # q个相同对子
+            playerlast = []
+            playerlast2 = []
+            for j in range(q):
+                k = find(max2, max1[0], j)
+                playerlast.append(playersuccess3[k])
+                playerlast2.append(k)
+            for j in range(q):
+                playerlast[j].sort()
+                playerlast[j].reverse()
+            # 相同对子
+            flag = 0
+            for j in range(q - 1):
+                if playerlast[j] < playerlast[j + 1]:
+                    flag = j + 1
+            print("胜利者是第" + str(playerlast2[flag]+1) + '位玩家')
+
+# 两对
+    elif playersuccess[0] == 3:
+        max1 = []
+        max2 = []
+        max3 = [0]
+        max4 = []
+        max5 = []
+        max6 = [0]
+        # 记录对子大小
+        for a in range(playernumber):
+            if a != 0:
+                max1.append(max3[0])
+                max2.append(max3[0])
+                max4.append(max6[0])
+                max5.append(max6[0])
+            max3=[0]
+            max6=[0]
+            for b in range(2, 15):
+                if playercardnumber1[a].count(b) == 2:
+                    max6.pop()
+                    max6.append(max3.pop())
+                    max3.append(b)  # 记录对子大小
+        max1.append(max3[0])
+        max2.append(max3[0])
+        max4.append(max6[0])
+        max5.append(max6[0])
+        max1.sort()
+        max1.reverse()
+        max4.sort()
+        max4.reverse()
+        # 最大的对子
+        if max1[0] > max1[1]:
+            print("胜利者是第" + str(max2.index(max1[0])+1) + '位玩家')
+        elif max1[0] <= max1[1] and max4[0] > max4[1]:
+            print("胜利者是第" + str(max5.index(max4[0])+1) + '位玩家')
+        else:  # 对子相同
+            playerlast = []
+            playerlast2 = []
+            q = max5.count(max4[0])  # q个相同对子
+            for a in range(i):
+                if (playersuccess3[a].count(max4[0]) == 2) and (playersuccess3[a].count(max1[0]) == 2):
+                    playerlast.append(playersuccess3[a])
+                    playerlast2.append(a)
+            for j in range(q):
+                playerlast[j].sort()
+                playerlast[j].reverse()
+            flag = 0
+            j = 0
+            while j < q - 1:
+                if playerlast[j] < playerlast[j + 1]:
+                    flag = j + 1
+                j += 1
+            print("胜利者是第" + str(playerlast2[flag]+1) + '位玩家')
+
+# 对子
+    elif playersuccess[0] == 2:
+        max1 = []
+        max2 = []
+        max3 = [0]
+        # 记录对子大小
+        for a in range(playernumber):
+            if a != 0:
+                max1.append(max3[0])
+                max2.append(max3[0])
+            max3 = [0]
+            for b in range(2, 15):
+                if playercardnumber1[a].count(b) == 2:
+                    max3.pop()
+                    max3.append(b)#记录对子大小
+        max1.append(max3[0])
+        max2.append(max3[0])
+        max1.sort()
+        max1.reverse()
+        #最大的对子
+        if max1[0] > max1[1]:
+            print("胜利者是第" + str(max2.index(max1[0])+1) + '位玩家')
+        else:  #对子相同
+            q = max1.count(max1[0])#q个相同对子
+            playerlast=[]
+            playerlast2=[]
+            for j in range(q):
+                k = find(max2, max1[0], j)
+                playerlast.append(playersuccess3[k])
+                playerlast2.append(k)
+            for j in range(q):
+                playerlast[j].sort()
+                playerlast[j].reverse()
+        #相同对子
+            flag = 0
+            for j in range(q-1):
+                if playerlast[j] < playerlast[j + 1]:
+                    flag = j + 1
+            print("胜利者是第" + str(playerlast2[flag]+1) + '位玩家')
+
+
+#高牌
+    elif playersuccess[0] == 1:
+        for j in range(i):
+            playersuccess3[j].sort()
+            playersuccess3[j].reverse()
+        flag = 0
+        j = 0
+        while j < i-1:
+            if playersuccess3[j] < playersuccess3[j + 1]:
+                flag = j + 1
+            j += 1
+        print("胜利者是第" + str(playersuccess4[flag]+1) + '位玩家')
 
